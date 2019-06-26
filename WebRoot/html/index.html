@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+     table.table{
+        width: 800px;
+         margin:0 auto;
+         font-size: 12px;
+     }
+     table tr th,table tr td{
+        border:1px solid #cccccc
+     }
+    </style>
+</head>
+<body>
+    <div style=" width: 800px; margin:0 auto;">
+            <button type="button" id="readExcel">服务器下载</button>
+            <p></p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>大小</th>
+                        <th>时间</th>
+                        <th>类型</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+            </tbody>
+            </table>
+            <p></p>
+            <form id="uploadForm"  enctype="multipart/form-data">
+                选择文件:<input type="file" id="file" name="file"/>
+            </form>
+            <button type="button" id="upload">上传</button>
+            <p></p>
+
+            <form id="uploadForms" enctype="multipart/form-data">
+                <!--webkitdirectory directory-->
+                选择文件夹<input type="file" id="file_input" name="file" multiple="multiple" />
+            </form>
+            <button type="button" id="uploads">上传</button>
+    </div>
+    <script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+         $.ajax({
+             type:'POST',
+             dataType:'json',
+             async   : false,
+             url:'/FTPFileController/fileList',
+             contentType:"application/x-www-form-urlencoded",
+             data:{},
+             success:function (data) {
+                 console.log(data);
+                 var html='';
+                 var orderInfo=data.fileList;//订单信息
+                 orderInfo.forEach((item,index,arr)=>{
+                     var leix=item.file==true?'文件':item.directory==true?'文件夹':'其他';
+                     var time=item.rawListing.substring(0,17);
+                     html+=`<tr>
+                            <td>${item.name}</td>
+                            <td>${item.size}</td>
+                            <td>${time}</td>
+                            <td class="type">${leix}</td>
+                            <td class="path" style="display: none;">${item.name}</td>
+                            <td><a href="/FTPFileController/folderDownLoad?ftpPath=${item.name}&fileType=${leix}" class="download">下载</a> <a href="javascript:void(0)" class="deletr">删除</a></td>
+                            </tr>`
+                 })
+                 $('.table tbody').append(html);
+                 $('.deletr').unbind('click');
+                 //删除行
+                 $('.deletr').click(function(){
+                     var pathName = $(this).parent().parent().find('td.path').text();
+
+                    $.ajax({
+                        type:'POST',
+                        dataType:'json',
+                        url:'/FTPFileController/fileDelete',
+                        data:{
+                            'params': JSON.stringify(
+                                {
+                                    pathName : pathName
+                                })
+                        },
+                        success:function (data) {
+                            if(data.result=='success'){
+
+                                window.location.reload();
+                            }else {
+                                alert("删除失败！")
+                            }
+                        }
+                    })
+                     // $(this).parent().parent().remove();
+                 });
+             }
+         });
+            /**单文件上传*/
+            $("#upload").click(function () {
+                var formData = new FormData($('#uploadForm')[0]);
+                $.ajax({
+                    type: 'post',
+                    url: '/FTPFileController/uploadFile',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success    : function (datas) {
+                        if(datas.result=='success'){
+                            alert("上传成功！")
+                            window.location.reload();
+                        }else {
+                            alert(datas.result);
+                        }
+                    },error : function () {
+                        alert("上传失败");
+                    }
+                })
+            });
+            /**多文件上传*/
+            $("#uploads").click(function () {
+                var formData = new FormData($('#uploadForms')[0]);
+                $.ajax({
+                    type: 'post',
+                    url: "/FTPFileController/manyFileUpload",
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success    : function (datas) {
+                        if(datas.result=='success'){
+                            alert("上传成功！")
+                            window.location.reload();
+                        }else {
+                            alert(datas.result);
+                        }
+                    },error : function () {
+                        alert("上传失败");
+                    }
+                })
+            });
+
+            /**文件解析*/
+            $("#readExcel").click(function () {
+                $.ajax({
+                    type: 'post',
+                    url: "/getExcelData/dataList",
+                    data: {},
+
+                    success    : function (datas) {
+                        // if(datas.result=='success'){
+                        //     alert("上传成功！")
+                        // }else {
+                        //     alert(datas.result);
+                        // }
+                    },error : function () {
+                        alert("解析失败");
+                    }
+                })
+            });
+     })
+
+
+    </script>
+</body>
+</html>

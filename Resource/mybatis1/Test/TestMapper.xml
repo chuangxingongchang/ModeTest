@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TestMapper">
+    <!--01亚度柜体板件清单.xlsx-->
+        <sql id="pd">
+            serialNumber,
+            productName,
+            orderDate,
+            customerName,
+            dealerName,
+            batchNumber,
+            orderNumber,
+            partName,
+            linePlan,
+            partNumber,
+            partLong,
+            partWith,
+            partHeight,
+            amount,
+            colorCode,
+            material,
+            color,
+            texture,
+            dosage,
+            edgeBand,
+            barCode,
+            remarks
+        </sql>
+
+    <sql id="pdcnc">
+            serialNumber,
+            productName,
+            orderDate,
+            customerName,
+            dealerName,
+            batchNumber,
+            orderNumber,
+            partName,
+            linePlan,
+            partNumber,
+            partLong,
+            partWith,
+            partHeight,
+            amount,
+            colorCode,
+            material,
+            color,
+            texture,
+            dosage,
+            edgeBand,
+            barCode,
+            remarks
+        </sql>
+        <sql id="pdmbxs">
+            serialNumber,
+            productName,
+            orderDate,
+            customerName,
+            dealerName,
+            batchNumber,
+            orderNumber,
+            partName,
+            linePlan,
+            partNumber,
+            partLong,
+            partWith,
+            partHeight,
+            amount,
+            colorCode,
+            material,
+            color,
+            texture,
+            dosage,
+            lineUsage,
+            barCode,
+            remarks,
+            partType,
+            openDirection,
+            handlePosition,
+            handleVacancy
+        </sql>
+
+    <!--04亚度推拉门拆单表（以后）.xlsx-->
+    <sql id="pdtlmcd">
+            serialNumber,
+            productName,
+            orderDate,
+            customerName,
+            dealerName,
+            batchNumber,
+            orderNumber,
+            doorStyle,
+            partType,
+            aluminumModel,
+            partLong,
+            partWith,
+            partHeight,
+            amount,
+            color,
+            texture,
+            remarks
+        </sql>
+
+    <!--01亚度柜体板件清单.xlsx-->
+    <insert id="gtbjqdInsert" parameterType="java.util.List">
+        INSERT INTO
+        I_MES_GTBJQD
+        (<include refid="pd"/>)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+           (#{item.serialNumber},
+            #{item.productName},
+            #{item.orderDate},
+            #{item.customerName},
+            #{item.dealerName},
+            #{item.batchNumber},
+            #{item.orderNumber},
+            #{item.partName},
+            #{item.linePlan},
+            #{item.partNumber},
+            #{item.partLong},
+            #{item.partWith},
+            #{item.partHeight},
+            #{item.amount},
+            #{item.colorCode},
+            #{item.material},
+            #{item.color},
+            #{item.texture},
+            #{item.dosage},
+            #{item.edgeBand},
+            #{item.barCode},
+            #{item.remarks})
+        </foreach>
+    </insert>
+
+    <!--02亚度柜体CNC清单.xlsx-->
+    <insert id="gtCNCInsert" parameterType="java.util.List">
+        INSERT INTO
+        I_MES_GTCNC
+        (<include refid="pdcnc"/>)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.serialNumber},
+            #{item.productName},
+            #{item.orderDate},
+            #{item.customerName},
+            #{item.dealerName},
+            #{item.batchNumber},
+            #{item.orderNumber},
+            #{item.partName},
+            #{item.linePlan},
+            #{item.partNumber},
+            #{item.partLong},
+            #{item.partWith},
+            #{item.partHeight},
+            #{item.amount},
+            #{item.colorCode},
+            #{item.material},
+            #{item.color},
+            #{item.texture},
+            #{item.dosage},
+            #{item.edgeBand},
+            #{item.barCode},
+            #{item.remarks})
+        </foreach>
+    </insert>
+
+    <!--03亚度门板吸塑清单.xlsx-->
+    <insert id="mbxsInsert" parameterType="java.util.List">
+        INSERT INTO
+        I_MES_MBXS
+        (<include refid="pdmbxs"/>)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.serialNumber},
+            #{item.productName},
+            #{item.orderDate},
+            #{item.customerName},
+            #{item.dealerName},
+            #{item.batchNumber},
+            #{item.orderNumber},
+            #{item.partName},
+            #{item.linePlan},
+            #{item.partNumber},
+            #{item.partLong},
+            #{item.partWith},
+            #{item.partHeight},
+            #{item.amount},
+            #{item.colorCode},
+            #{item.material},
+            #{item.color},
+            #{item.texture},
+            #{item.dosage},
+            #{item.lineUsage},
+            #{item.barCode},
+            #{item.remarks},
+            #{item.partType},
+            #{item.openDirection},
+            #{item.handlePosition},
+            #{item.handleVacancy}
+            )
+        </foreach>
+    </insert>
+
+    <!--04亚度推拉门拆单表（以后）.xlsx-->
+    <insert id="tlmcdInsert" parameterType="java.util.List">
+        INSERT INTO
+        I_MES_TLMCD
+        (<include refid="pdtlmcd"/>)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.serialNumber},
+            #{item.productName},
+            #{item.orderDate},
+            #{item.customerName},
+            #{item.dealerName},
+            #{item.batchNumber},
+            #{item.orderNumber},
+            #{item.doorStyle},
+            #{item.partType},
+            #{item.aluminumModel},
+            #{item.partLong},
+            #{item.partWith},
+            #{item.partHeight},
+            #{item.amount},
+            #{item.color},
+            #{item.texture},
+            #{item.remarks}
+          )
+        </foreach>
+    </insert>
+</mapper>
